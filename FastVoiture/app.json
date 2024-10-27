@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "FastVoiture",
+    "slug": "FastVoiture",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/fvsmall_icon.png",
+    "scheme": "fastvoiture",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/fv_icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#e8ebec"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.fastVoiture",
+      "config": {
+        "googleMapsApiKey": "AIzaSyB32JtR5NW-OyWRQwWWYQZd4TccrUdSfnU"
+       }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/fvsmall_icon.png",
+        "backgroundColor": "#46c2c2"
+      },
+      "package": "com.example.fastVoiture",
+      "config": {
+        "googleMaps": {
+         "apiKey": "AIzaSyDgb6QTFtWqjlE6kMpIkKysHskxlUfT9wM"
+         }
+     }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/fvsmall_icon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "9acea07c-113f-4c6b-a144-6a91e975e78f"
+      }
+    }
+  }
+}
