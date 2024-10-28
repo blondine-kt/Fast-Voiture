@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as Notifications from "expo-notifications";
 import {
   View,
   Button,
@@ -14,6 +15,14 @@ import axios from "axios";
 
 const MyForm = () => {
   //using fetch to connect with fast server
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Nom d'utilisateur est requis"),
@@ -38,25 +47,24 @@ const MyForm = () => {
   const handleSubmit = async (values) => {
     const formData = { ...values };
     const Driver = {
-      'userName': formData.username,
-      'nom': formData.name + " " + formData.surname,
-      'password': formData.password,
-      'email': formData.email,
-      'phone': formData.phone,
-      'license_plate': formData.license_plate,
-      'driver_license': formData.driver_license,
+      userName: formData.username,
+      nom: formData.name + " " + formData.surname,
+      password: formData.password,
+      email: formData.email,
+      phone: formData.phone,
+      license_plate: formData.license_plate,
+      driver_license: formData.driver_license,
     };
     if (Driver != null) {
       try {
-      
-        const response = await axios.post("http://192.168.2.11:8000/",{ 
-          'userName': formData.username,
-          'nom': formData.name + " " + formData.surname,
-          'password': formData.password,
-          'email': formData.email,
-          'phone': formData.phone,
-          'license_plate': formData.license_plate,
-          'driver_license': formData.driver_license,
+        const response = await axios.post("http://192.168.2.11:8000/", {
+          userName: formData.username,
+          nom: formData.name + " " + formData.surname,
+          password: formData.password,
+          email: formData.email,
+          phone: formData.phone,
+          license_plate: formData.license_plate,
+          driver_license: formData.driver_license,
         });
 
         if (!response.ok) {
@@ -64,6 +72,15 @@ const MyForm = () => {
         }
         const result = await response.json();
         console.log(result);
+        // Second, call the method
+
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Ajouter",
+            body: "Utilisateur ajouté",
+          },
+          trigger: null,
+        });
         Alert.alert("Form Submitted", JSON.stringify(result));
       } catch (error) {
         if (error.response) {

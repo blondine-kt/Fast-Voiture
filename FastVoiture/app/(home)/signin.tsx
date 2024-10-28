@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError } from 'axios'
+import * as Notifications from 'expo-notifications';
 
 
 import { Link, Redirect, router, useRouter } from "expo-router";
@@ -20,6 +21,14 @@ interface FormValues {
   username: string;
   password: string;
 }
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 
 const validationSchema = Yup.object().shape({
@@ -58,6 +67,13 @@ const MyForm = () => {
             'name': data.username,
             'password':data.password,
           }
+          Notifications.scheduleNotificationAsync({
+            content: {
+              title: 'Succès',
+              body:`Bienvenue ${user.name}`,
+            },
+            trigger: null,
+          });
           setUser(user)
           router.push('/(home)/(tabs)/acceuil')
         }
