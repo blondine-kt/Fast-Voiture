@@ -1,10 +1,46 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React,{useEffect, useState} from "react";
+import { StyleSheet, View,Text } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import * as Location from 'expo-location';
 
 export default function MapScreen() {
+
+  const [location, setLocation] = useState({});
+  const [errorMsg, setErrorMsg] = useState('');
+
+  useEffect(() => {
+    (async () => {
+      
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  let text = 'Waiting..';
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
+
+
+
+
+
+
+
   return (
     <View style={styles.container}>
+
+    <Text style={styles.paragraph}>Your location: {text}</Text>
+
+
       <MapView
         style={styles.map}
         initialRegion={{
@@ -42,6 +78,10 @@ const styles = StyleSheet.create({
   },
   map: {
     width: "100%",
-    height: "100%",
+    height: "60%",
+  },
+  paragraph: {
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
