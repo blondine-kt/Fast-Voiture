@@ -3,7 +3,7 @@ import { StyleSheet, View, Button } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
-const App = () => {
+const Map_directions = () => {
 
     const api_key = process.env.EXPO_PUBLIC_API_KEY;
 
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default Map_directions;
