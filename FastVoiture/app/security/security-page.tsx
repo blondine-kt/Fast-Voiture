@@ -19,7 +19,7 @@ export default function ProfileScreen() {
      <View style={styles.wrapper}>
      <View style={styles.items}>
      <TouchableOpacity style={styles.item} onPress={
-        () => router.push('/security/modify-password')
+        () => router.push('/security/modifypassword')
      }>
         <Text style={styles.itemText}>
         Modifier Mot de Passe

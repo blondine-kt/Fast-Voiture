@@ -30,7 +30,7 @@ export default function ProfileScreen() {
             Modifier Informations
         </Text>
      </TouchableOpacity>
-     <TouchableOpacity style={styles.item}>
+     <TouchableOpacity style={styles.item} onPress={() => router.push('/(locs)/mapsview')}>
         <Text style={styles.itemText}>
             Ajouter Adresse
         </Text>

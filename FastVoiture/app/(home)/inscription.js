@@ -12,6 +12,8 @@ import {
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { dbdrivers } from "../firebaseConfig";
+import { collection, query, where, getDocs, setDoc, doc,addDoc } from 'firebase/firestore';;
 
 const MyForm = () => {
   //using fetch to connect with fast server
@@ -23,6 +25,8 @@ const MyForm = () => {
       shouldSetBadge: false,
     }),
   });
+
+  
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Nom d'utilisateur est requis"),
@@ -44,20 +48,53 @@ const MyForm = () => {
     driver_license: Yup.string().required("Le numero du permis est requis"),
   });
 
+  //unique username verification
+  const usernameExists = async (username) => {
+    const q = query(collection(dbdrivers, 'drivers'), where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+    return !querySnapshot.empty; // Returns true if username exists
+  };
+
+  //firestoredb
+  const addDriver = async(values)=>{
+    const exists = await usernameExists(values.userName);
+  if(exists == false){
+    try {
+      const docRef = await addDoc(collection(dbdrivers, "drivers"), {
+        username: values.userName,
+        nom: values.nom,
+        password: values.password,
+        email: values.email,
+        phone: values.phone,
+        license_plate: values.license_plate,
+        driver_license: values.driver_license,
+      });
+      console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+   }
+  }else{
+    Alert.alert("Erreur","Username existe deja")
+  }
+    
+  }
+    
+  
   const handleSubmit = async (values) => {
     const formData = { ...values };
     const Driver = {
-      userName: formData.username,
-      nom: formData.name + " " + formData.surname,
-      password: formData.password,
-      email: formData.email,
-      phone: formData.phone,
-      license_plate: formData.license_plate,
-      driver_license: formData.driver_license,
+      'userName': formData.username,
+      'nom': formData.name + " " + formData.surname,
+      'password': formData.password,
+      'email': formData.email,
+      'phone': formData.phone,
+      'license_plate': formData.license_plate,
+      'driver_license': formData.driver_license,
     };
+    addDriver(Driver)
     if (Driver != null) {
       try {
-        const response = await axios.post("http://192.168.2.11:8000/", {
+        const response = await axios.post("http://192.168.2.11:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
           password: formData.password,
@@ -93,6 +130,7 @@ const MyForm = () => {
       Alert.alert("Vous devez entrer vos informations");
     }
   };
+ 
 
   return (
     <ScrollView>

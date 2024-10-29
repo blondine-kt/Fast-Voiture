@@ -124,9 +124,14 @@ Taches:
     ----------
      - Utilisation d'une base de donnée cloud pour sauvegarder les transaction
 
-     
 
 
+# Ressources
+ https://docs.expo.dev/guides/using-firebase/
+ https://docs.expo.dev/versions/latest/sdk/background-fetch/
+ https://github.com/googlemaps/google-maps-services-python/blob/master/googlemaps/geocoding.py
+ https://blog.spirokit.com/maps-in-react-native-a-step-by-step-guide
+ https://dekings.medium.com/get-distance-and-duration-between-two-places-using-google-map-and-python-d299ef77ef6
     
 
 

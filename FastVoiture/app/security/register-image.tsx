@@ -31,8 +31,8 @@ export default function CameraScreen() {
       
       if (data) {
         setCapturedPhoto(data.uri);
-
         setModalIsOpen(true);
+        uploadImage(data.uri)
       } else {
         console.error('No data returned from takePictureAsync');
       }
@@ -49,18 +49,18 @@ export default function CameraScreen() {
      
     const base64Blob = `data:audio/wav;base64,${response}`;
 
-      formData.append('image', {
+      formData.append('file', {
         uri: uri,
-        name: 'photo.jpg', 
+        name: 'photo.jpeg', 
         type: 'image/jpeg', 
       } as unknown as Blob);
       if(user.user != null){
         setusername(user.user.name)
-        formData.append('username',username );
+        formData.append('username',user.user.name );
       }
   
       try {
-        const response = await fetch('http://192.168.2.11/register', {
+        const response = await fetch('http://192.168.2.11:5001/register', {
           method: 'POST',
           body: formData,
           headers: {
@@ -72,6 +72,7 @@ export default function CameraScreen() {
         if (response.ok) {
           Alert.alert('Success', responseData.message);
         } else {
+          console.log(responseData.error)
           Alert.alert('Upload failed', responseData.error);
         }
       } catch (error) {

@@ -1,10 +1,11 @@
 import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
 import React, { useRef } from 'react';
 import { useState } from 'react';
-import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera'
 import { faRotateLeft} from '@fortawesome/free-solid-svg-icons/faRotateLeft'
+import * as FileSystem from 'expo-file-system';
 
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
@@ -43,11 +44,50 @@ export default function App() {
         setCapturedPhoto(data.uri);
 
         setModalIsOpen(true);
+        CompareuploadImage(data.uri)
       } else {
         console.error('No data returned from takePictureAsync');
       }
     }
     } 
+
+    const CompareuploadImage = async (uri: string) => {
+      const formData = new FormData();
+
+       // Use FileSystem to read the file as a blob
+    const response = await FileSystem.readAsStringAsync(uri, {
+      encoding: FileSystem.EncodingType.Base64,
+    });
+     
+    const base64Blob = `data:image/jpeg;base64,${response}`;
+
+      formData.append('file', {
+        uri: uri,
+        name: 'photo.jpeg', 
+        type: 'image/jpeg', 
+      } as unknown as Blob);
+  
+      try {
+        const response = await fetch('http://192.168.2.11:5001/login', {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        const responseData = await response.json();
+        if (response.ok) {
+          Alert.alert('Success', responseData.message);
+        } else {
+          console.log(responseData.error)
+          Alert.alert('Upload failed', responseData.error);
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+        Alert.alert('Upload failed', 'Something went wrong!');
+      }
+    };
 
   return (
     <View style={styles.container}>

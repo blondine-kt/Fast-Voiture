@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Button } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE,Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
 const Map_directions = () => {
@@ -23,16 +23,16 @@ const Map_directions = () => {
       initialRegion={{
         latitude: 45.5018869,
         longitude: -73.56739189999999,
-        latitudeDelta: 5,
+        latitudeDelta: 3,
         longitudeDelta: 1,
       }}
       >
         <MapViewDirections
           origin={origin}
           destination={destination}
-          apikey="AIzaSyDgb6QTFtWqjlE6kMpIkKysHskxlUfT9wM"
+          apikey="AIzaSyCzlmUr9hg0E2elKzaHqr9eV-UuX4jOlBI"
           strokeWidth={4}
-          strokeColor="red"
+          strokeColor="#35c3f5"
           mode={'DRIVING'}
         />
        <Marker
