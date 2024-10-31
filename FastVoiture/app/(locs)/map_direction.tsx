@@ -1,21 +1,44 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE,Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 
-const Map_directions = () => {
+
+interface MyItenaryInfo {
+    ori: number[];  
+    dest: number[]; 
+  }
+const Map_directions:React.FC<MyItenaryInfo> = ({ ori,dest }) => {
+
+    const { width, height } = Dimensions.get('window');
+    
+    
+    const ASPECT_RATIO = width / height;
+    const latitude_delta = 0.0922
+    const longitude_delta = latitude_delta * ASPECT_RATIO
 
     const api_key = process.env.EXPO_PUBLIC_API_KEY;
 
   const [destination, setDestination] = useState({
-      latitude: 45.5405804,
+      latitude: 45.5405804 ,
       longitude: -73.5550988,
     });
 
   const [origin, setOrigin] = useState({
       latitude: 45.5528556,
-      longitude: -73.5565604,
+      longitude:  -73.5565604,
     });
+
+    if( ori.length != 0){
+        const[latitude, longitude] = ori
+        setOrigin({latitude,longitude})
+    }
+    if(dest.length !=0){
+        const[latitude,longitude] = dest
+        setDestination({latitude,longitude})
+    }
+
+    
 
   return (
     <View style={styles.container}>
@@ -23,8 +46,8 @@ const Map_directions = () => {
       initialRegion={{
         latitude: 45.5018869,
         longitude: -73.56739189999999,
-        latitudeDelta: 3,
-        longitudeDelta: 1,
+        latitudeDelta:  0.0922,
+        longitudeDelta: longitude_delta,
       }}
       >
         <MapViewDirections

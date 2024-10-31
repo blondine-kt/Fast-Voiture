@@ -13,7 +13,8 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { dbdrivers } from "../firebaseConfig";
-import { collection, query, where, getDocs, setDoc, doc,addDoc } from 'firebase/firestore';;
+import { collection, query, where, getDocs, setDoc, doc,addDoc } from 'firebase/firestore';
+import { router } from "expo-router";
 
 const MyForm = () => {
   //using fetch to connect with fast server
@@ -91,10 +92,10 @@ const MyForm = () => {
       'license_plate': formData.license_plate,
       'driver_license': formData.driver_license,
     };
-    addDriver(Driver)
+    
     if (Driver != null) {
       try {
-        const response = await axios.post("http://192.168.2.11:8050/", {
+        const response = await axios.post("http://192.168.43.75:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
           password: formData.password,
@@ -104,21 +105,17 @@ const MyForm = () => {
           driver_license: formData.driver_license,
         });
 
-        if (!response.ok) {
+        if (response.status != 200) {
           throw new Error(`Response not ok! status: ${response.status}`);
         }
-        const result = await response.json();
-        console.log(result);
-        // Second, call the method
-
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Ajouter",
-            body: "Utilisateur ajouté",
-          },
-          trigger: null,
-        });
-        Alert.alert("Form Submitted", JSON.stringify(result));
+        else{
+          addDriver(Driver)
+          const result = await response;
+          console.log(result);
+          // Second, call the method
+          router.push('/(home)/signin')
+        }
+        
       } catch (error) {
         if (error.response) {
           console.error("Error data:", error.response.data);

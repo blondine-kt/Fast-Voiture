@@ -11,6 +11,7 @@ interface LocationCoords {
 const Carte: React.FC = () => {
   const [location, setLocation] = useState<LocationCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  
 
   useEffect(() => {
     const getLocation = async () => {

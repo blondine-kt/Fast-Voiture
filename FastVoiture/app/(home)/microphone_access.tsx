@@ -39,7 +39,7 @@ const RecordAudio: React.FC = () => {
   };
 
   const uploadAndCompareVoice = async (uri: string) => {
-    const apiUrl = 'http://192.168.2.11:5000/se_connecter'; 
+    const apiUrl = 'http://192.168.43.75:5000/se_connecter'; 
     const formData = new FormData();
 
      // Use FileSystem to read the file as a blob

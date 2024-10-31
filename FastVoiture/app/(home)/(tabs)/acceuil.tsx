@@ -37,7 +37,7 @@ export default function Home(){
               Voirs les Activités
              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => router.push('/(tabs)/services')}>
             <Text style={styles.itemText}>
                Aperçu des Services 
             </Text>

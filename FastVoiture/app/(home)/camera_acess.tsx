@@ -7,12 +7,18 @@ import { faCamera } from '@fortawesome/free-solid-svg-icons/faCamera'
 import { faRotateLeft} from '@fortawesome/free-solid-svg-icons/faRotateLeft'
 import * as FileSystem from 'expo-file-system';
 
+import { useUser } from "../userauth";
+import { router } from 'expo-router';
+
+
 export default function App() {
   const [facing, setFacing] = useState<CameraType>('back');
   const [permission, requestPermission] = useCameraPermissions();
   const camRef = useRef<CameraView>(null);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+
+  const { setUser } = useUser();
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -68,7 +74,7 @@ export default function App() {
       } as unknown as Blob);
   
       try {
-        const response = await fetch('http://192.168.2.11:5001/login', {
+        const response = await fetch('http://192.168.43.75:5001/login', {
           method: 'POST',
           body: formData,
           headers: {
@@ -78,7 +84,14 @@ export default function App() {
   
         const responseData = await response.json();
         if (response.ok) {
-          Alert.alert('Success', responseData.message);
+        console.log(responseData.message);
+        const user ={
+          'name': responseData.username,
+          'password':"",
+        }
+        setUser(user)
+        router.push('/(home)/(tabs)/acceuil')
+      
         } else {
           console.log(responseData.error)
           Alert.alert('Upload failed', responseData.error);

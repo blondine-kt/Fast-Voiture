@@ -43,7 +43,7 @@ const RecordAudio: React.FC = () => {
   };
 
   const uploadAudio = async (uri: string) => {
-    const apiUrl = 'http://192.168.2.11:5000/enregistrer_voix'; 
+    const apiUrl = 'http://192.168.43.75:5000/enregistrer_voix'; 
     const formData = new FormData();
     
    
