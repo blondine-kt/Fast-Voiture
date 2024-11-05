@@ -5,6 +5,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 function Gallery() {
   const handleDragStart = (e) => e.preventDefault();
   const items = [
+    
     // eslint-disable-next-line react/jsx-key
     <img
       src="../../assets/images/image-driver.jpg"
