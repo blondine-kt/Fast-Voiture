@@ -9,6 +9,7 @@ import {
   Alert,
   ScrollView,
 } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -17,15 +18,11 @@ import { collection, query, where, getDocs, setDoc, doc,addDoc } from 'firebase/
 import { router } from "expo-router";
 
 const MyForm = () => {
+  //image useState to collect uri for the data base
+  const [imageUri, setImageUri] = useState(null);
   //using fetch to connect with fast server
 
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: false,
-    }),
-  });
+ 
 
   
 
@@ -47,7 +44,29 @@ const MyForm = () => {
       "Le numero d'immatriculation est requis"
     ),
     driver_license: Yup.string().required("Le numero du permis est requis"),
+    image: Yup.mixed().required('Image is required').test(
+      'fileSize',
+      'File is too large',
+      (value) => value && value.size <= 5 * 1024 * 1024 // Max 5MB
+    ).test(
+      'fileType',
+      'Unsupported file type',
+      (value) => value && ['image/jpeg', 'image/png'].includes(value.type)
+    ),
   });
+
+
+  //fuction to pick image from gallery
+  const pickImage = async (setFieldValue) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+    })
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri);
+      setFieldValue('image', result.assets[0]); 
+    }
+  };
 
   //unique username verification
   const usernameExists = async (username) => {
@@ -69,6 +88,7 @@ const MyForm = () => {
         phone: values.phone,
         license_plate: values.license_plate,
         driver_license: values.driver_license,
+        
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -83,6 +103,7 @@ const MyForm = () => {
   
   const handleSubmit = async (values) => {
     const formData = { ...values };
+
     const Driver = {
       'userName': formData.username,
       'nom': formData.name + " " + formData.surname,
@@ -91,10 +112,19 @@ const MyForm = () => {
       'phone': formData.phone,
       'license_plate': formData.license_plate,
       'driver_license': formData.driver_license,
+     
+     
     };
     
     if (Driver != null) {
       try {
+        if (imageUri) {
+          const imageName = imageUri.split('/').pop() || 'image.jpg';
+          const imageFile = {
+            uri: imageUri,
+            name: imageName,
+            type: 'image/jpg', 
+          };
         const response = await axios.post("http://192.168.43.75:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
@@ -103,18 +133,23 @@ const MyForm = () => {
           phone: formData.phone,
           license_plate: formData.license_plate,
           driver_license: formData.driver_license,
-        });
+          image:imageFile,
+          },
+         { headers: {
+          'Content-Type': 'multipart/form-data',
+        },});
 
         if (response.status != 200) {
           throw new Error(`Response not ok! status: ${response.status}`);
         }
         else{
+          //adds to firestore
           addDriver(Driver)
           const result = await response;
           console.log(result);
-          // Second, call the method
           router.push('/(home)/signin')
         }
+      }
         
       } catch (error) {
         if (error.response) {
@@ -142,11 +177,12 @@ const MyForm = () => {
           phone: "",
           license_plate: "",
           driver_license: "",
+          image: null,
         }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors }) => (
+        {({ handleChange, handleBlur, handleSubmit, values,setFieldValue, touched, errors }) => (
           <View style={styles.container}>
             <TextInput
               placeholder="Nom d'utilisateur"
@@ -244,6 +280,14 @@ const MyForm = () => {
             {errors.driver_license && (
               <Text style={styles.error}>{errors.driver_license}</Text>
             )}
+            <Button title="Pick an Image" onPress={() => pickImage(setFieldValue)} />
+          
+          {imageUri && (
+            <View style={styles.imageContainer}>
+              <Image source={{ uri: imageUri }} style={styles.image} />
+            </View>
+          )}
+          {touched.image && errors.image && <Text style={styles.error}>{errors.image}</Text>}
 
             <Button onPress={handleSubmit} title="Submit" />
           </View>
@@ -267,6 +311,9 @@ const styles = StyleSheet.create({
   error: {
     color: "red",
     marginBottom: 10,
+  },
+  imageContainer: {
+    marginVertical: 10,
   },
   image: {
     width: 100,
