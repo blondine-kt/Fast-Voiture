@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,15 +16,32 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import axios, { AxiosError } from "axios";
 
 import { useUser } from "../../userauth";
-import Map_directions from "@/app/(locs)/map_direction";
+import Map_directions from "../../(locs)/map_direction";
+
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+
+interface Info {
+  distance: string;
+  temps: string;
+}
+
+interface LocationState {
+  ori: Location;
+  dest: Location;
+  info: Info;
+}
 
 export default function Services() {
   const [isActive, setIsActive] = useState(false);
 
-  const [origin, setOrigin] = useState([])
-  const [destination,setDestination] = useState([])
-  const [info, setInfo] = useState({})
-  
+  const [location, setLocation] = useState<LocationState>({
+    ori: { latitude: 0, longitude: 0 },
+    dest: { latitude: 0, longitude: 0 },
+    info: { distance: "", temps: "" },
+  });
 
   interface FormValues {
     origin: string;
@@ -36,7 +53,11 @@ export default function Services() {
     destination: Yup.string().required("La destination  est requise"),
   });
 
-  const handle_itenary = () => {};
+  useEffect(() => {
+    console.log("Location updated:", location);
+  }, [location]);
+
+  
 
   const onSubmit = async (data: FormValues) => {
     if (data != null) {
@@ -44,24 +65,29 @@ export default function Services() {
         origin: data.origin,
         destination: data.destination,
       };
-      
-      fetch('http://192.168.43.75:8060/getitenary', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataInfo),
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-         setOrigin(data.origin)
-         setDestination(data.destination)
-         setInfo(data.info)
-      console.log(origin,destination,data.info)})
-      .catch(error => console.error('Error:', error));
-  }
-};
+
+      try {
+        const response = await fetch('http://192.168.2.11:8060/getitenary', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }, body: JSON.stringify(dataInfo),
+        });
+
+        const responseData = await response.json();
+        console.log("Received data:", responseData);
+
+        // Set the location state with the response data
+        setLocation({
+          dest: { latitude: responseData.destination.latitude, longitude: responseData.destination.longitude },
+          info: { distance: responseData.info.distance, temps: responseData.info.temps },
+          ori: { latitude: responseData.origin.latitude, longitude: responseData.origin.longitude },
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
 
   const {
     control,
@@ -126,7 +152,7 @@ export default function Services() {
       
       {isActive && (
         <View style={styles.map_container}>
-          <Map_directions ori={origin} dest={destination} />
+          <Map_directions location={location} />
         </View>
       )}
     </View>

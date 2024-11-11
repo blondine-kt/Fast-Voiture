@@ -125,7 +125,7 @@ const MyForm = () => {
             name: imageName,
             type: 'image/jpg', 
           };
-        const response = await axios.post("http://192.168.43.75:8050/", {
+        const response = await axios.post("http://192.168.2.11:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
           password: formData.password,
@@ -133,7 +133,7 @@ const MyForm = () => {
           phone: formData.phone,
           license_plate: formData.license_plate,
           driver_license: formData.driver_license,
-          image:imageFile,
+          image:imageFile.name,
           },
          { headers: {
           'Content-Type': 'multipart/form-data',

@@ -1,14 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Button, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE,Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import * as Location from 'expo-location';
 
+interface Location {
+  latitude: number;
+  longitude: number;
+}
+interface Info {
+  distance: string;
+  temps: string;
+}
 
-interface MyItenaryInfo {
-    ori: number[];  
-    dest: number[]; 
-  }
-const Map_directions:React.FC<MyItenaryInfo> = ({ ori,dest }) => {
+interface LocationState {
+  ori: Location;
+  dest: Location;
+  info: Info;
+}
+
+interface LocationComponentProps {
+  location: LocationState;
+}
+const Map_directions:React.FC<LocationComponentProps> = ({ location }) => {
+
+  
 
     const { width, height } = Dimensions.get('window');
     
@@ -28,15 +44,11 @@ const Map_directions:React.FC<MyItenaryInfo> = ({ ori,dest }) => {
       latitude: 45.5528556,
       longitude:  -73.5565604,
     });
+     
 
-    if( ori.length != 0){
-        const[latitude, longitude] = ori
-        setOrigin({latitude,longitude})
-    }
-    if(dest.length !=0){
-        const[latitude,longitude] = dest
-        setDestination({latitude,longitude})
-    }
+    useEffect(() => {
+      console.log("Location updated:", location);
+    }, [location]);
 
     
 
@@ -46,8 +58,8 @@ const Map_directions:React.FC<MyItenaryInfo> = ({ ori,dest }) => {
       initialRegion={{
         latitude: 45.5018869,
         longitude: -73.56739189999999,
-        latitudeDelta:  0.0922,
-        longitudeDelta: longitude_delta,
+        latitudeDelta:  0.004,
+        longitudeDelta: 0.002,
       }}
       >
         <MapViewDirections
@@ -58,12 +70,13 @@ const Map_directions:React.FC<MyItenaryInfo> = ({ ori,dest }) => {
           strokeColor="#35c3f5"
           mode={'DRIVING'}
         />
+        
        <Marker
-          coordinate={origin}
+          coordinate={location.ori}
           title="Starting Point"
         />
         <Marker
-          coordinate={destination}
+          coordinate={location.dest}
           title="Destination Point"
         />
       </MapView>

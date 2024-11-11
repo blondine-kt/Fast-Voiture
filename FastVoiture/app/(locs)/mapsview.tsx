@@ -55,8 +55,8 @@ const Carte: React.FC = () => {
         region={{
           latitude: location ? location.latitude : 37.78825,
           longitude: location ? location.longitude : -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.004,
+          longitudeDelta: 0.002,
         }}
       >
         {location && (
