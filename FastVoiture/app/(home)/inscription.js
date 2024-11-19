@@ -123,7 +123,7 @@ const MyForm = () => {
             name: imageName,
             type: 'image/jpg', 
           };
-        const response = await axios.post("http://192.168.2.11:8050/", {
+        const response = await axios.post("http://192.168.90.75:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
           password: formData.password,

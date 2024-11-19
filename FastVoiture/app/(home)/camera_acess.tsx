@@ -74,7 +74,7 @@ export default function App() {
       } as unknown as Blob);
   
       try {
-        const response = await fetch('http://192.168.2.11:5001/login', {
+        const response = await fetch('http://192.168.90.75:5001/login', {
           method: 'POST',
           body: formData,
           headers: {

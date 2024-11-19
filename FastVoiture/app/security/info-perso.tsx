@@ -20,7 +20,7 @@ const DriverInfo: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get<Driver>(`http://192.168.2.11:8050/driver/${userName}`);
+      const response = await axios.get<Driver>(`http://192.168.90.75:8050/driver/${userName}`);
       setDriver(response.data);
     } catch (err) {
       setError('Driver not found or error occurred');
@@ -44,7 +44,7 @@ const DriverInfo: React.FC = () => {
         value={user.user?.name}
       />
 
-      <Button title="Mes Info" onPress={fetchDriverData} />
+      <Button title="Mes Infos" onPress={fetchDriverData} />
 
       {loading && <Text>Loading...</Text>}
       {error && <Text style={styles.error}>{error}</Text>}

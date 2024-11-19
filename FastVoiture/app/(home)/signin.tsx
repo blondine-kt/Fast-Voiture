@@ -55,7 +55,7 @@ const MyForm = () => {
     if(data != null){
       try{
          
-        const response = await axios.post("http://192.168.2.11:8050/Login/",{ 
+        const response = await axios.post("http://192.168.90.75:8050/Login/",{ 
           'userName': data.username,
           'password': data.password,
         });
@@ -67,13 +67,6 @@ const MyForm = () => {
             'name': data.username,
             'password':data.password,
           }
-          Notifications.scheduleNotificationAsync({
-            content: {
-              title: 'Succès',
-              body:`Bienvenue ${user.name}`,
-            },
-            trigger: { seconds: 2 },
-          });
           setUser(user)
           router.push('/(home)/(tabs)/acceuil')
         }

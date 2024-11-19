@@ -60,7 +60,7 @@ export default function CameraScreen() {
       }
   
       try {
-        const response = await fetch('http://192.168.2.11:5001/register', {
+        const response = await fetch('http://192.168.90.75:5001/register', {
           method: 'POST',
           body: formData,
           headers: {
