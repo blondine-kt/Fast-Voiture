@@ -13,5 +13,5 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-, "app/payments/paypal.js"  ]
+, "app/payments/payment.tsx"  ]
 }

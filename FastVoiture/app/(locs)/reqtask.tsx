@@ -10,7 +10,7 @@ const BACKGROUND_FETCH_TASK = 'background-fetch-task';
 TaskManager.defineTask(BACKGROUND_FETCH_TASK, async () => {
   try {
     // Perform your server request (fetch data from your server)
-    const response = await fetch('https://192.168.43.75:8060/');
+    const response = await fetch('');
     const data = await response.json();
 
     // You can process or log your data (in this case, we'll show it in a modal)
@@ -95,7 +95,7 @@ const RetriveTask = () => {
 
       <Button
         title="Simulate Data Fetch"
-        onPress={() => showFetchedData('This is a sample message from the server!')}
+        onPress={() => showFetchedData(fetchedData)}
       />
     </View>
   );

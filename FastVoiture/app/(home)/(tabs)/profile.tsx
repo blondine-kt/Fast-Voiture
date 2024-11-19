@@ -25,9 +25,9 @@ export default function ProfileScreen() {
             Sécurité
         </Text>
      </TouchableOpacity>
-     <TouchableOpacity style={styles.item}>
+     <TouchableOpacity style={styles.item} onPress={() => router.push('/security/profil')}>
         <Text style={styles.itemText}>
-            Modifier Informations
+            Profil
         </Text>
      </TouchableOpacity>
      <TouchableOpacity style={styles.item} onPress={() => router.push('/(locs)/mapsview')}>

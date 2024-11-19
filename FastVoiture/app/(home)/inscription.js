@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Alert,
   ScrollView,
+  Image,
 } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { Formik } from "formik";
@@ -44,15 +45,12 @@ const MyForm = () => {
       "Le numero d'immatriculation est requis"
     ),
     driver_license: Yup.string().required("Le numero du permis est requis"),
-    image: Yup.mixed().required('Image is required').test(
-      'fileSize',
-      'File is too large',
-      (value) => value && value.size <= 5 * 1024 * 1024 // Max 5MB
-    ).test(
-      'fileType',
-      'Unsupported file type',
-      (value) => value && ['image/jpeg', 'image/png'].includes(value.type)
-    ),
+    image: Yup.mixed().required('Image is required')
+    // .test(
+    //   'fileType',
+    //   'Unsupported file type',
+    //   (value) => value && ['image/jpeg', 'image/png','image/jpg'].includes(value.type)
+    // ),
   });
 
 
@@ -133,11 +131,8 @@ const MyForm = () => {
           phone: formData.phone,
           license_plate: formData.license_plate,
           driver_license: formData.driver_license,
-          image:imageFile.name,
-          },
-         { headers: {
-          'Content-Type': 'multipart/form-data',
-        },});
+          image:imageFile,
+          },);
 
         if (response.status != 200) {
           throw new Error(`Response not ok! status: ${response.status}`);
@@ -287,7 +282,9 @@ const MyForm = () => {
               <Image source={{ uri: imageUri }} style={styles.image} />
             </View>
           )}
-          {touched.image && errors.image && <Text style={styles.error}>{errors.image}</Text>}
+          {errors.image && (
+              <Text style={styles.error}>{errors.image}</Text>
+            )}
 
             <Button onPress={handleSubmit} title="Submit" />
           </View>

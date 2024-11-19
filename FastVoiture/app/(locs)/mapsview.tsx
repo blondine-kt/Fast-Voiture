@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
+import { useUser } from '../userauth';
 
 interface LocationCoords {
   latitude: number;
   longitude: number;
 }
+
+const { setUserLocation } = useUser();
 
 const Carte: React.FC = () => {
   const [location, setLocation] = useState<LocationCoords | null>(null);
@@ -24,6 +27,7 @@ const Carte: React.FC = () => {
       // Get the current location and watch for changes
       const currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation.coords as LocationCoords);
+      setUserLocation(currentLocation.coords as LocationCoords );
 
       // Start watching location changes
       Location.watchPositionAsync(

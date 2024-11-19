@@ -5,15 +5,12 @@ import {
   View,
   Button,
   TouchableOpacity,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+  Modal,
 
 } from "react-native";
-import { TextInput } from "react-native-paper";
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
-import { useForm, Controller } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import axios, { AxiosError } from "axios";
 
 import { useUser } from "../../userauth";
 import Map_directions from "../../(locs)/map_direction";
@@ -24,130 +21,144 @@ interface Location {
 }
 
 interface Info {
-  distance: string;
-  temps: string;
+  distance: {
+    text: string;
+    value: number;
+  };
+  temps: {
+    text: string;
+    value: number;
+  };
 }
 
 interface LocationState {
-  ori: Location;
-  dest: Location;
+  username: string
+  origin: Location;
+  destination: Location;
   info: Info;
+  prix: number;
 }
 
 export default function Services() {
-  const [isActive, setIsActive] = useState(false);
+  const [isPressed, setIsPressed] = useState<boolean>(false);
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [accepted, setAccepted] =useState(false);
 
   const [location, setLocation] = useState<LocationState>({
-    ori: { latitude: 0, longitude: 0 },
-    dest: { latitude: 0, longitude: 0 },
-    info: { distance: "", temps: "" },
+    username:'',
+    origin: { latitude: 0, longitude: 0 },
+    destination: { latitude: 0, longitude: 0 },
+    info: { distance: {text:"",value:0}, temps:{text:"",value:0} },
+    prix: 0.00,
   });
 
-  interface FormValues {
-    origin: string;
-    destination: string;
-  }
+  const fetchData = async () => {
+    setLoading(true);  
 
-  const validationSchema = Yup.object().shape({
-    origin: Yup.string().required("Le depart est requis"),
-    destination: Yup.string().required("La destination  est requise"),
-  });
+    try {
+      const response = await fetch('https://location-api-63ti.onrender.com/getdata'); 
+      const data = await response.json();
+      console.log(data)
 
+      
+      const dynamicKey = Object.keys(data)[0]; 
+      const fetchedItinerary = data[dynamicKey];
+
+      
+      if (fetchedItinerary) {
+        setModalVisible(true)
+        if(accepted){
+        setLocation(fetchedItinerary);
+        }
+
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      Alert.alert('Error', 'Failed to fetch data from the server');
+    } finally {
+      setLoading(false); 
+    }
+  };
+
+  
+  
   useEffect(() => {
     console.log("Location updated:", location);
   }, [location]);
 
   
 
-  const onSubmit = async (data: FormValues) => {
-    if (data != null) {
-      const dataInfo = {
-        origin: data.origin,
-        destination: data.destination,
-      };
+  
+  //pour afficher et cacher le map
+  const toggleVisibility = () =>{
+    setIsActive((prevState) => !prevState)
+  }
 
-      try {
-        const response = await fetch('http://192.168.2.11:8060/getitenary', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          }, body: JSON.stringify(dataInfo),
-        });
-
-        const responseData = await response.json();
-        console.log("Received data:", responseData);
-
-        // Set the location state with the response data
-        setLocation({
-          dest: { latitude: responseData.destination.latitude, longitude: responseData.destination.longitude },
-          info: { distance: responseData.info.distance, temps: responseData.info.temps },
-          ori: { latitude: responseData.origin.latitude, longitude: responseData.origin.longitude },
-        });
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    }
+  // accepter la requete passager
+  const handleAccept = () => {
+    setAccepted(true);
+    Alert.alert('Accepter', `${location.username}`);
+    setModalVisible(false); 
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    resolver: yupResolver(validationSchema),
-  });
+  // Refuser la requete
+  const handleRefuse = () => {
+    setAccepted(false)
+    Alert.alert('Refuser', `${location.username}`);
+    setModalVisible(false); // Close the modal
+  };
+
+  
 
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.header}>Services</Text>
-        <Button title="active" onPress={() => setIsActive(true)} />
+        <Pressable
+        style={ [
+          styles.button,
+          { backgroundColor: isPressed ? 'skyblue' : 'dodgerblue' },
+         
+        ]}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+
+        onPress={toggleVisibility}>
+          <Text style={styles.buttonText}>Activer</Text>
+        </Pressable>
+
       </View>
       <View>
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            
-            <TextInput
-              label="Depart"
-              onChangeText={onChange}
-              onBlur={onBlur}
-              value={value}
-              style={styles.inputs}
-              error={!!errors.origin}
-            />
-          )}
-          name="origin"
-          rules={{ required: true }}
-        />
-        {errors.origin && <Text>{errors.origin.message}</Text>}
-        
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Destination"
-              onChangeText={onChange}
-              onBlur={onBlur}
-              value={value}
-              style={styles.inputs}
-              error={!!errors.destination}
-            />
-          )}
-          name="destination"
-          rules={{ required: true }}
-        />
-        {errors.destination && <Text>{errors.destination.message}</Text>}
-
+  
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={handleSubmit(onSubmit)}
+            onPress={()=> fetchData()}
           >
             <Text style={styles.text}>Trouver</Text>
           </TouchableOpacity>
         </View>
+        {loading && <ActivityIndicator size="large" color="#0000ff" />}
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)} // Close modal if the user taps outside
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalText}>{`Course Reçu ${location.username}`}</Text>
+            <View style={styles.buttonModalContainer}>
+              <Button title="Accept" onPress={handleAccept} />
+              <Button title="Refuse" onPress={handleRefuse} />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       
       
       {isActive && (
@@ -225,5 +236,33 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     marginHorizontal: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  buttonModalContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
   },
 });

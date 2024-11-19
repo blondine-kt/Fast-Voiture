@@ -21,6 +21,7 @@ export default function SecurityLayout() {
        <Stack.Screen name="register-image" options={{title:"Enregistrer une Image"}}/>
        <Stack.Screen name="modifier" options={{title:"Modifier Mot de passe"}}/>
        <Stack.Screen name='register-voice' options={{title:'Enregistrer votre voix'}}/>
+       <Stack.Screen name='profil' options={{ title:"Mes Infos"}} />
     </Stack>
     
   );

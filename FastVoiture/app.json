@@ -17,7 +17,7 @@
       "bundleIdentifier": "com.example.fastVoiture",
       "config": {
         "googleMapsApiKey": "AIzaSyB32JtR5NW-OyWRQwWWYQZd4TccrUdSfnU"
-       }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,9 +27,9 @@
       "package": "com.example.fastVoiture",
       "config": {
         "googleMaps": {
-         "apiKey": "AIzaSyDgb6QTFtWqjlE6kMpIkKysHskxlUfT9wM"
-         }
-     }
+          "apiKey": "AIzaSyDgb6QTFtWqjlE6kMpIkKysHskxlUfT9wM"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -38,7 +38,7 @@
     },
     "plugins": [
       [
-      "expo-router"
+        "expo-router"
       ],
       [
         "expo-notifications",
@@ -47,7 +47,8 @@
           "color": "#ffffff",
           "defaultChannel": "default"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
