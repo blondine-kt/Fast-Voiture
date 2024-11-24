@@ -10,6 +10,16 @@ interface User {
   password: string;
     
 }
+interface UserData{
+  driver_license: string;
+  email: string;
+  id: number;
+  license_plate: string;
+  nom: string;
+  password: string;
+  phone: string;
+  userName: string;
+}
 
 interface UserContextProps {
   user: User | null;
@@ -17,6 +27,8 @@ interface UserContextProps {
   signOut: () => void
   userLocation: UserLocation | null;
   setUserLocation :(userLocation: UserLocation) => void;
+  userdata : UserData|null;
+  setUserData:(userdata: UserData|null) => void;
 }
 
 const UserContext = createContext<UserContextProps | undefined>(undefined);
@@ -29,11 +41,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const [userLocation, setUserLocation] = useState<UserLocation |null>(null);
+  const [userdata, setUserData] = useState<UserData|null>(null);
 
 
 
   return (
-    <UserContext.Provider value={{ user, setUser,signOut, userLocation, setUserLocation }}>
+    <UserContext.Provider value={{ user, setUser,signOut, userLocation, setUserLocation, userdata,setUserData }}>
       {children}
     </UserContext.Provider>
   );

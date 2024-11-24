@@ -19,6 +19,7 @@ export default function LocationLayout() {
        
        <Stack.Screen name="mapsview" options={{title:"Carte"}} />
        <Stack.Screen name="reqtask" options={{title:"BackFetch"}} />
+       <Stack.Screen name="map_direction" options={{headerShown: false}} />
       
     </Stack>
     

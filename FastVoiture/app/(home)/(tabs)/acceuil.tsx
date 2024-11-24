@@ -32,7 +32,7 @@ export default function Home(){
                Renforçer la sécurité
              </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.item}>
+            <TouchableOpacity style={styles.item} onPress={() => router.push('/(home)/(tabs)/activities')} >
             <Text style={styles.itemText}>
               Voirs les Activités
              </Text>

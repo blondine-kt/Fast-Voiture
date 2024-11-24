@@ -84,13 +84,19 @@ export default function App() {
   
         const responseData = await response.json();
         if (response.ok) {
-        console.log(responseData.message);
-        const user ={
-          'name': responseData.username,
-          'password':"",
+          console.log(responseData)
+        if(responseData[0].name == "Inconnu" || responseData[0].name == ""){
+          Alert.alert("No match:","No matchfound")
         }
-        setUser(user)
-        router.push('/(home)/(tabs)/acceuil')
+        else{
+          const user ={
+            'name': responseData[0].name,
+            'password':"",
+          }
+          setUser(user)
+          router.push('/(home)/(tabs)/acceuil')
+        }
+        
       
         } else {
           console.log(responseData.error)

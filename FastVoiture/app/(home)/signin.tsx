@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { Button, TextInput, Text } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
@@ -48,21 +48,22 @@ const MyForm = () => {
   });
 
   
-  const { setUser } = useUser();
+  const { setUser,setUserData,userdata } = useUser();
   
 
   const onSubmit = async(data: FormValues) => {
     if(data != null){
       try{
          
-        const response = await axios.post("http://192.168.90.75:8050/Login/",{ 
+        const response = await axios.post("http://192.168.2.11:8050/Login/",{ 
           'userName': data.username,
           'password': data.password,
         });
         if(response.status == 200){
           const result = await response;
-          console.log(result);
+          console.log(result.data);
           //Alert.alert("Form Submitted", JSON.stringify(result));
+          setUserData(result.data.user)
           const user ={
             'name': data.username,
             'password':data.password,
@@ -83,6 +84,9 @@ const MyForm = () => {
       }
     }
   };
+  useEffect(() => {
+    console.log("UserData updated:", userdata);
+  }, [setUserData]);
 
   return (
     <View style={styles.container}>

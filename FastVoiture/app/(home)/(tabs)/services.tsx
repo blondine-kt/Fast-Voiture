@@ -12,7 +12,6 @@ import {
 
 } from "react-native";
 
-import { useUser } from "../../userauth";
 import Map_directions from "../../(locs)/map_direction";
 
 interface Location {
@@ -153,7 +152,7 @@ export default function Services() {
             <Text style={styles.modalText}>{`Course Reçu: ${location.username}`}</Text>
             <Text style={styles.modalText}>{`Prix: ${location.prix}`}</Text>
             <Text style={styles.modalText}>{`Distance: ${location.info.distance.text}`}</Text>
-             <Text style={styles.modalText}>{`Durée: ${location.info.temps.text}`}</Text>
+            <Text style={styles.modalText}>{`Durée: ${location.info.temps.text}`}</Text>
             <View style={styles.buttonModalContainer}>
               <Button title="Accept" onPress={handleAccept} />
               <Button title="Refuse" onPress={handleRefuse} />

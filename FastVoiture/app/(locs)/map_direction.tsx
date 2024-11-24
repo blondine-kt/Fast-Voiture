@@ -3,7 +3,6 @@ import { StyleSheet, View, Button, Dimensions } from 'react-native';
 import MapView, { PROVIDER_GOOGLE,Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
-import { useUser } from '../userauth';
 
 interface Location {
   latitude: number;
@@ -29,24 +28,13 @@ interface LocationState {
   prix: number;
 }
 
-const userLocation = useUser()
+
 
 interface LocationComponentProps {
   location: LocationState;
 }
 const Map_directions:React.FC<LocationComponentProps> = ({ location }) => {
-
   
-
-    const { width, height } = Dimensions.get('window');
-    
-    
-    const ASPECT_RATIO = width / height;
-    const latitude_delta = 0.0922
-    const longitude_delta = latitude_delta * ASPECT_RATIO
-
-    const api_key = process.env.EXPO_PUBLIC_API_KEY;
-
 
      
 

@@ -5,6 +5,7 @@ import { faTaxi } from "@fortawesome/free-solid-svg-icons/faTaxi";
 import { faChartPie } from "@fortawesome/free-solid-svg-icons/faChartPie";
 import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 
+
 import React from "react";
 
 
@@ -19,17 +20,17 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="services"
-        options={{
-          title: "Services",
-          tabBarIcon: () => <FontAwesomeIcon icon={faTaxi} />,
-        }}
-      />
-      <Tabs.Screen
         name="activities"
         options={{
           title: "Activites",
           tabBarIcon: () => <FontAwesomeIcon icon={faChartPie} />,
+        }}
+      />
+      <Tabs.Screen
+        name="services"
+        options={{
+          title: "Services",
+          tabBarIcon: () => <FontAwesomeIcon icon={faTaxi} />,
         }}
       />
       <Tabs.Screen

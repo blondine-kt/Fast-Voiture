@@ -11,8 +11,8 @@ const DriverInfo: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const user = useUser();
-  const name = user.user?.name ?? ''
+  const {user,userdata} = useUser();
+  const name = user?.name ?? ''
   
 
   // Fetch driver data from FastAPI
@@ -41,7 +41,7 @@ const DriverInfo: React.FC = () => {
       
       <TextInput
         style={styles.input}
-        value={user.user?.name}
+        value={user?.name}
       />
 
       <Button title="Mes Infos" onPress={fetchDriverData} />
