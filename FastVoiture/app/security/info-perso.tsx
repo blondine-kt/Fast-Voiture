@@ -1,63 +1,122 @@
 import { Driver } from "@/assets/types";
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import axios from 'axios';
+import { View, Text, StyleSheet,Button, TextInput, Alert, Pressable } from 'react-native';
+
+import axios, { AxiosError } from 'axios';
+import ModifyPassword  from './modifier'
 import { useUser } from "../userauth";
+import { Divider } from "react-native-paper";
 
 
 const DriverInfo: React.FC = () => {
-  const [userName, setUsername] = useState<string>('');
-  const [driver, setDriver] = useState<Driver | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
   const {user,userdata} = useUser();
-  const name = user?.name ?? ''
+  const [userInfo,setUserInfo] = useState({
+    userName:userdata?.userName,
+    nom:userdata?.nom,
+    email:userdata?.email,
+    phone:userdata?.phone,
+
+
+  })
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const [isPressed, setIsPressed] = useState<boolean>(false);
+ 
+  
+  //pour afficher et cacher le map
+  const toggleVisibility = () =>{
+    setIsActive((prevState) => !prevState)
+  }
+  
   
 
-  // Fetch driver data from FastAPI
-  const fetchDriverData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await axios.get<Driver>(`http://192.168.90.75:8050/driver/${userName}`);
-      setDriver(response.data);
-    } catch (err) {
-      setError('Driver not found or error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Modifier les infos du conducteur
+  const ModifyUserData = async() => {
+   if(userInfo){
+    try{
+         
+      const response = await axios.post("http://192.168.2.11:8050/update",{ 
+        'userName': userInfo.userName,
+        'nom':userInfo.nom,
+        'email':userInfo.email,
+        'phone': userInfo.phone
+      });
+      if(response.status == 200){
+        const result = await response;
+        console.log(result);
+        Alert.alert("Info Modifié avec Succès");
+        
+      }
+     
 
-  useEffect(() => {
-    if (name !== userName) {  
-      setUsername(name);
+    }catch (error) {
+      const axiosError = error as AxiosError; 
+
+      if (axiosError.response) {
+        console.error("Error data:", axiosError.response.data);
+      } else {
+        console.error("Error:", axiosError);
+      }
     }
-  }, [name, userName]);
+   }
+  };
+  const handleInputChange = (field: keyof typeof userInfo, value: string) => {
+    setUserInfo(prevState => ({
+      ...prevState,
+      [field]: value 
+    }));
+  };
+ 
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Driver Information</Text>
-      
-      <TextInput
-        style={styles.input}
-        value={user?.name}
-      />
+      <Text style={styles.header}>Mes Informations</Text>
 
-      <Button title="Mes Infos" onPress={fetchDriverData} />
-
-      {loading && <Text>Loading...</Text>}
-      {error && <Text style={styles.error}>{error}</Text>}
-
-      {driver && !loading && !error && (
+      { userdata && (
         <View style={styles.driverInfo}>
-          <Text><strong>Username:</strong> {driver.userName}</Text>
-          <Text><strong>Name:</strong> {driver.nom}</Text>
-          <Text><strong>Email:</strong> {driver.email}</Text>
-          <Text><strong>Phone:</strong> {driver.phone}</Text>
-          <Text><strong>License Number:</strong> {driver.license_plate}</Text>
+        <Text style={styles.label}>Username: </Text>
+        <TextInput
+        style={styles.input}
+        value={userInfo.userName}
+      />
+        <Text style={styles.label}>Name: </Text>
+        <TextInput
+        style={styles.input}
+        value={userInfo.nom}
+        onChangeText={text => handleInputChange("nom",text)}
+      />
+        <Text style={styles.label}>Email: </Text>
+        <TextInput
+        style={styles.input}
+        value={userInfo.email}
+        onChangeText={text => handleInputChange("email",text)}
+      />
+      <Text style={styles.label}>Phone: </Text>
+        <TextInput
+        style={styles.input}
+        value={userInfo.phone}
+        onChangeText={text => handleInputChange("phone",text)}
+        />
         </View>
       )}
+      <Button title="Modifier" onPress={ModifyUserData}/>
+
+      <Divider/>
+      <Pressable
+        style={ [
+          styles.button,
+          { backgroundColor: isPressed ? 'skyblue' : 'dodgerblue' },
+         
+        ]}
+        onPressIn={() => setIsPressed(true)}
+        onPressOut={() => setIsPressed(false)}
+
+        onPress={toggleVisibility}>
+          <Text style={styles.label}>Activer</Text>
+        </Pressable>
+       {isActive &&(
+         <ModifyPassword/>
+       )}
+      
     </View>
   );
 };
@@ -73,6 +132,15 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent:"center",
+    alignContent:"center"
   },
   input: {
     height: 40,

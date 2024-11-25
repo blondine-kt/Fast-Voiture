@@ -8,8 +8,7 @@ import { useUser } from '../userauth';
 
 
 
-const user = useUser()
-const password = user.user.password
+const {user} = useUser();
 const schema = yup.object().shape({
   newPassword: yup
     .string()
@@ -29,6 +28,7 @@ const ModifyPassword = () => {
   const onSubmit = (data) => {
     // Handle password modification logic here
     const formdata = {... data}
+    formdata.append("userName",user?.name)
     Alert.alert('Password modified', JSON.stringify(formdata));
   };
 

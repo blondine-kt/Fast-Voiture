@@ -27,7 +27,8 @@ const Carte: React.FC = () => {
       // Get the current location and watch for changes
       const currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation.coords as LocationCoords);
-      setUserLocation(currentLocation.coords as LocationCoords );
+      setUserLocation(currentLocation.coords as LocationCoords)
+     
 
       // Start watching location changes
       Location.watchPositionAsync(
@@ -38,6 +39,7 @@ const Carte: React.FC = () => {
         },
         (newLocation) => {
           setLocation(newLocation.coords as LocationCoords);
+          setUserLocation(newLocation.coords as LocationCoords)
         }
       );
     };

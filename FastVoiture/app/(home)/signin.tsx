@@ -22,13 +22,7 @@ interface FormValues {
   password: string;
 }
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-  }),
-});
+
 
 
 const validationSchema = Yup.object().shape({

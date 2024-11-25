@@ -13,30 +13,9 @@ import {
 } from "react-native";
 
 import Map_directions from "../../(locs)/map_direction";
+//interface pour recuperer les donnees de localisation
+import { LocationState } from "@/assets/types";
 
-interface Location {
-  latitude: number;
-  longitude: number;
-}
-
-interface Info {
-  distance: {
-    text: string;
-    value: number;
-  };
-  temps: {
-    text: string;
-    value: number;
-  };
-}
-
-interface LocationState {
-  username: string
-  origin: Location;
-  destination: Location;
-  info: Info;
-  prix: number;
-}
 
 export default function Services() {
   const [isPressed, setIsPressed] = useState<boolean>(false);
@@ -82,7 +61,7 @@ export default function Services() {
   };
 
   
-  
+ //change chaque fois que la localisation change 
   useEffect(() => {
     console.log("Location updated:", location);
   }, [location]);

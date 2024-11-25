@@ -1,10 +1,10 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, StatusBar } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, View } from 'react-native';
 import DriverInfo from './info-perso';
 
-const App: React.FC = () => {
+const Profil: React.FC = () => {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    < SafeAreaView style={{ flex: 1 }}>
       <StatusBar barStyle="dark-content" />
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         <DriverInfo />
@@ -13,4 +13,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default Profil;

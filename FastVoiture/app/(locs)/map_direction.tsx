@@ -4,32 +4,11 @@ import MapView, { PROVIDER_GOOGLE,Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import * as Location from 'expo-location';
 
-interface Location {
-  latitude: number;
-  longitude: number;
-}
-interface Info {
-  distance: {
-    text: string;
-    value: number;
-  };
-  temps: {
-    text: string;
-    value: number;
-  };
- 
-}
-
-interface LocationState {
-  username:string
-  origin: Location;
-  destination: Location;
-  info: Info;
-  prix: number;
-}
+import { LocationState } from '@/assets/types';
 
 
 
+//affiche l'origin et la destination de la course avec les Markers
 interface LocationComponentProps {
   location: LocationState;
 }
@@ -37,7 +16,7 @@ const Map_directions:React.FC<LocationComponentProps> = ({ location }) => {
   
 
      
-
+//change la localisation a chaque click
     useEffect(() => {
       console.log("Location updated:", location);
     }, [location]);

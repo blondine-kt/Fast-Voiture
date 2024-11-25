@@ -8,3 +8,26 @@ export interface Driver {
     driver_license:string;
   }
 
+  interface Location {
+    latitude: number;
+    longitude: number;
+  }
+  interface Info {
+    distance: {
+      text: string;
+      value: number;
+    };
+    temps: {
+      text: string;
+      value: number;
+    };
+   
+  }
+  
+  export interface LocationState {
+    username:string
+    origin: Location;
+    destination: Location;
+    info: Info;
+    prix: number;
+  }
