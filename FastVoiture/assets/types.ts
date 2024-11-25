@@ -31,3 +31,13 @@ export interface Driver {
     info: Info;
     prix: number;
   }
+
+  export interface Course{
+    chauffeur: string|undefined;
+    passager: string;
+    origin : string|undefined;
+    destination: string|undefined;
+    immatriculation: string|undefined;
+    prix: number
+
+  }
