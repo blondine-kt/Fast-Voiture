@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet,Button, TextInput, Alert, Pressable } from 'react-native';
 
 import axios, { AxiosError } from 'axios';
-import ModifyPassword  from './modifier'
+import ModifyPassword  from './nouveau-motpasse';
 import { useUser } from "../userauth";
 import { Divider } from "react-native-paper";
 

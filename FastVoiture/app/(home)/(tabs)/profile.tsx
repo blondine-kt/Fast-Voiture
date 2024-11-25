@@ -1,21 +1,41 @@
 
 import React from 'react'
-import { View,Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View,Text, StyleSheet, TouchableOpacity,AlertButton,Alert, } from 'react-native'
 import { useRouter } from 'expo-router';
 
 import {useUser} from '../../userauth';
 
 
+
+
 export default function ProfileScreen() {
-    const user = useUser()
+    const {user,signOut} = useUser()
     const router = useRouter()
+
+    const goback =()=>{
+       if(user){
+        signOut()
+        router.push("/")
+       }
+    }
+
+    //button pour se deconnecter
+    const toDisconnect = () =>
+      Alert.alert('Déconnexion', 'Voulez-vous vraiment vous déconnecter ?', [
+        {
+          text: 'Non',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Oui', onPress: () => goback()},
+      ]);
   
     return (
      <View style={styles.container}>
         { /* View containing user name */ } 
      {user &&
      <View> 
-     <Text  style={styles.header}>Acceuil {user.user?.name}</Text>
+     <Text  style={styles.header}>Acceuil {user?.name}</Text>
      </View>}
      <View style={styles.wrapper}>
      <View style={styles.items}>
@@ -40,7 +60,7 @@ export default function ProfileScreen() {
             Paramètres
         </Text>
      </TouchableOpacity>
-     <TouchableOpacity style={styles.item}>
+     <TouchableOpacity style={styles.item} onPress={() => toDisconnect()}>
         <Text style={styles.itemText}>
             Déconnexion
         </Text>

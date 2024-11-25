@@ -9,7 +9,7 @@ interface LocationCoords {
   longitude: number;
 }
 
-const { setUserLocation } = useUser();
+
 
 const Carte: React.FC = () => {
   const [location, setLocation] = useState<LocationCoords | null>(null);
@@ -27,7 +27,7 @@ const Carte: React.FC = () => {
       // Get the current location and watch for changes
       const currentLocation = await Location.getCurrentPositionAsync({});
       setLocation(currentLocation.coords as LocationCoords);
-      setUserLocation(currentLocation.coords as LocationCoords)
+      
      
 
       // Start watching location changes
@@ -39,7 +39,7 @@ const Carte: React.FC = () => {
         },
         (newLocation) => {
           setLocation(newLocation.coords as LocationCoords);
-          setUserLocation(newLocation.coords as LocationCoords)
+          
         }
       );
     };
