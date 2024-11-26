@@ -45,26 +45,10 @@ const MyForm = () => {
       "Le numero d'immatriculation est requis"
     ),
     driver_license: Yup.string().required("Le numero du permis est requis"),
-    image: Yup.mixed().required('Image is required')
-    // .test(
-    //   'fileType',
-    //   'Unsupported file type',
-    //   (value) => value && ['image/jpeg', 'image/png','image/jpg'].includes(value.type)
-    // ),
-  });
+    
 
 
-  //fuction to pick image from gallery
-  const pickImage = async (setFieldValue) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-    })
-    if (!result.canceled) {
-      setImageUri(result.assets[0].uri);
-      setFieldValue('image', result.assets[0]); 
-    }
-  };
+  })
 
   //unique username verification
   const usernameExists = async (username) => {
@@ -116,13 +100,7 @@ const MyForm = () => {
     
     if (Driver != null) {
       try {
-        if (imageUri) {
-          const imageName = imageUri.split('/').pop() || 'image.jpg';
-          const imageFile = {
-            uri: imageUri,
-            name: imageName,
-            type: 'image/jpg', 
-          };
+       
         const response = await axios.post("http://192.168.90.75:8050/", {
           userName: formData.username,
           nom: formData.name + " " + formData.surname,
@@ -144,7 +122,7 @@ const MyForm = () => {
           console.log(result);
           router.push('/(home)/signin')
         }
-      }
+      
         
       } catch (error) {
         if (error.response) {
@@ -275,16 +253,7 @@ const MyForm = () => {
             {errors.driver_license && (
               <Text style={styles.error}>{errors.driver_license}</Text>
             )}
-            <Button title="Pick an Image" onPress={() => pickImage(setFieldValue)} />
-          
-          {imageUri && (
-            <View style={styles.imageContainer}>
-              <Image source={{ uri: imageUri }} style={styles.image} />
-            </View>
-          )}
-          {errors.image && (
-              <Text style={styles.error}>{errors.image}</Text>
-            )}
+
 
             <Button onPress={handleSubmit} title="Submit" />
           </View>

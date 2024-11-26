@@ -21,7 +21,7 @@ export default function Home(){
         }
         <View style={styles.wrapper}>
           <View style={styles.items}>
-            <TouchableOpacity style={styles.item} onPress={() => router.push('/payments/payment')} >
+            <TouchableOpacity style={styles.item} onPress={() => router.push('/payments/register-card')} >
               <Text style={styles.itemText}>
                 Commençez à gagner
               </Text>

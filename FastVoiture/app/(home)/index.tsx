@@ -2,6 +2,7 @@ import { Link, Stack } from 'expo-router';
 import {StyleSheet, Text, View,Animated,ScrollView,TouchableOpacity,Image } from "react-native";
 import React,{ useRef } from "react";
 import { useRouter } from 'expo-router';
+import GfGApp from './botContainer';
 
 
 
@@ -56,6 +57,7 @@ export default function HomeScreen() {
       <View style={styles.url_container}>
         <Link style={styles.url_text} href={'/signin'}>Vous avez déja un compte? Se connecter</Link>
       </View>
+    
     </View>
   );
 }
