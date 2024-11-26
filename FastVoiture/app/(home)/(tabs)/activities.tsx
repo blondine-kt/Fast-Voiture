@@ -118,10 +118,13 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 16,
+    padding:5,
+    color: "#12082d",
   },
 
   price: {
     fontSize: 14,
+    padding:5,
 
     color: "#12082d",
   },
